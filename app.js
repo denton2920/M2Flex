@@ -18,6 +18,8 @@ let playerAmountButtons = [];
 let gameState = gamestate_start;
 let ingameState = ingamestate_start;
 
+let lastRoll = -1;
+
 let images ={};
 
 function createRect(x,y,w,h){
@@ -35,6 +37,34 @@ function createRect(x,y,w,h){
 function clearCanvas(){
     g.fillStyle = "lightslategray";
     g.fillRect(0,0, canvas.Width, canvas.height);
+
+    if(gameState == gamestate_ingame )
+    {
+        startRoll();
+    }
+}
+
+function startRoll()
+{
+    ingameState = ingamestate_roll
+    lastRoll 
+}
+
+function endRoll()
+{
+}
+
+function drawUI()
+{
+    if(gameState == ingamestate_roll )
+    {
+        if(lastRoll ==-1)
+        {
+            g.fillText("rollen...." ,20,20)
+        }else{
+            "dice"+lastRoll+".png"
+        }
+    }  
 }
 
 
@@ -89,6 +119,35 @@ function drawIngame()
         g.fillStyle = "#FFFFFF";
         g.fillText((i+1)+"",pos.x,pos.y+20);
     }
+    for(let i = 0; i<pawPositions.length;i++)
+    {
+        let pos = pawPositions[i];
+        let boardI = pos.boardI;
+
+        let boardpos = boardPositions[boardI];
+        let pawnSize = boardPositionSize/2;
+        if(i==0)
+        {
+            g.drawImage(images["pawn"+i+".png"],boardpos.x,boardpos.y,pawnSize,pawnSize)
+
+        }
+        if(i==1)
+        {
+            g.drawImage(images["pawn"+i+".png"],boardpos.x + 25,boardpos.y,pawnSize,pawnSize)
+
+        }
+        if(i==2)
+        {
+            g.drawImage(images["pawn"+i+".png"],boardpos.x,boardpos.y+25,pawnSize,pawnSize)
+
+        }
+        if(i==3)
+        {
+            g.drawImage(images["pawn"+i+".png"],boardpos.x+25,boardpos.y+25,pawnSize,pawnSize)
+
+        }
+    }
+    g.drawImage(images["snakes.png"],0,55,600,600)
 }
 function drawGameStart()
 {
@@ -99,7 +158,7 @@ function drawGameStart()
         g.fillRect(pos.x,pos.y,pos.w,pos.h);
         g.fillStyle = "#FFFFFF";
         g.fillText((i+1)+"",pos.x,pos.y+20);
-        g.drawImage(images["pawn"+i+".png"],pos.x,pos.y,pos.w,pos.h)
+            g.drawImage(images["pawn"+i+".png"],pos.x,pos.y,pos.w,pos.h)
     }
     g.fillText("Click the amount of players to start",610,225);
 
@@ -113,6 +172,7 @@ function draw()
         drawGameStart();
     } else if(gameState == gamestate_ingame){
         drawIngame();
+        drawUI();
     }
     clearCanvas();
 }
@@ -162,6 +222,7 @@ function startGame(playerAmount)
        let a = createPawn(i);
        pawPositions.push(a);
     }
+    draw();
 }
 
 function canvasClicked(mouseEvent){
